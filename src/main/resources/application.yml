@@ -1,0 +1,32 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://db.YOUR_SUPABASE_PROJECT.supabase.co:5432/postgres
+    username: postgres
+    password: YOUR_SUPABASE_PASSWORD
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    open-in-view: false
+
+application:
+  security:
+    jwt:
+      secret-key: YOUR_JWT_SECRET_KEY_AT_LEAST_256_BITS_LONG_CHANGE_ME_IN_PRODUCTION
+      expiration: 86400000       # 1 day
+      refresh-expiration: 604800000  # 7 days
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
