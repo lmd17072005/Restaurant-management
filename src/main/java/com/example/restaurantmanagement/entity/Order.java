@@ -1,38 +1,46 @@
-ackage com.example.restaurantmanagement.entity;
+package com.example.restaurantmanagement.entity;
+
 import com.example.restaurantmanagement.entity.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
-import java.math.BigDecimal;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
 @Entity
-@Table(name = "orders")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class Order extends BaseEntity {
+@Table(name = "don_hang")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class Order {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "don_hang_id")
     private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "table_id", nullable = false)
-    private RestaurantTable table;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "hoa_don_id", nullable = false)
+    private Invoice invoice;
+
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "trang_thai", nullable = false)
     @Builder.Default
-    private OrderStatus status = OrderStatus.PENDING;
-    @Column(name = "total_amount", precision = 12, scale = 2)
+    private OrderStatus status = OrderStatus.cho_che_bien;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "tao_boi", nullable = false)
+    private User createdBy;
+
+    @Column(name = "ngay_tao", nullable = false, updatable = false)
     @Builder.Default
-    private BigDecimal totalAmount = BigDecimal.ZERO;
-    @Column(columnDefinition = "TEXT")
-    private String note;
+    private LocalDateTime createdAt = LocalDateTime.now();
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<OrderItem> orderItems = new ArrayList<>();
-    public void recalculateTotal() {
-        this.totalAmount = orderItems.stream()
-                .map(item -> item.getUnitPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
 }
+

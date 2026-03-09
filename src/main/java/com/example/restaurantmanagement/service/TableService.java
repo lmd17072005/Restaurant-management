@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface TableService {
     List<TableResponse> getAllTables();
-    TableResponse getTableById(Long id);
+    TableResponse getTableById(Integer id);
     List<TableResponse> getTablesByStatus(TableStatus status);
     TableResponse createTable(TableRequest request);
-    TableResponse updateTable(Long id, TableRequest request);
-    TableResponse updateTableStatus(Long id, TableStatus status);
-    void deleteTable(Long id);
+    TableResponse updateTable(Integer id, TableRequest request);
+    TableResponse updateTableStatus(Integer id, TableStatus status);
+    void deleteTable(Integer id);
 }
 

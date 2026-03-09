@@ -7,12 +7,11 @@ import java.util.List;
 
 public interface MenuItemService {
     List<MenuItemResponse> getAllMenuItems();
-    MenuItemResponse getMenuItemById(Long id);
-    List<MenuItemResponse> getMenuItemsByCategory(Long categoryId);
-    List<MenuItemResponse> getAvailableMenuItems();
+    MenuItemResponse getMenuItemById(Integer id);
+    List<MenuItemResponse> getMenuItemsByCategory(Integer categoryId);
     List<MenuItemResponse> searchMenuItems(String keyword);
     MenuItemResponse createMenuItem(MenuItemRequest request);
-    MenuItemResponse updateMenuItem(Long id, MenuItemRequest request);
-    void deleteMenuItem(Long id);
+    MenuItemResponse updateMenuItem(Integer id, MenuItemRequest request);
+    void deleteMenuItem(Integer id);
 }
 

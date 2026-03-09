@@ -1,14 +1,23 @@
 package com.example.restaurantmanagement.dto.response;
+
 import com.example.restaurantmanagement.entity.enums.Role;
+import com.example.restaurantmanagement.entity.enums.UserStatus;
 import lombok.*;
+
 import java.time.LocalDateTime;
-import java.util.UUID;
-@Data @NoArgsConstructor @AllArgsConstructor @Builder
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class UserResponse {
-    private UUID id;
-    private String email;
+    private Long id;
+    private Role role;
     private String fullName;
     private String phone;
-    private Role role;
+    private String email;
+    private String username;
+    private UserStatus status;
     private LocalDateTime createdAt;
 }
+

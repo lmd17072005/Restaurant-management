@@ -1,17 +1,23 @@
 package com.example.restaurantmanagement.dto.response;
+
+import com.example.restaurantmanagement.entity.enums.MenuItemStatus;
 import lombok.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-@Data @NoArgsConstructor @AllArgsConstructor @Builder
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MenuItemResponse {
-    private Long id;
+    private Integer id;
+    private Integer categoryId;
+    private String categoryName;
     private String name;
-    private String description;
     private BigDecimal price;
     private String imageUrl;
-    private Long categoryId;
-    private String categoryName;
-    private Boolean isAvailable;
+    private MenuItemStatus status;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
 }
+

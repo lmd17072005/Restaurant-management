@@ -1,6 +1,8 @@
-ackage com.example.restaurantmanagement.entity.enums;
+package com.example.restaurantmanagement.entity.enums;
+
 public enum Role {
-    ADMIN,
-    STAFF,
-    CUSTOMER
+    QUAN_LY,
+    NHAN_VIEN,
+    KHACH_HANG
 }
+

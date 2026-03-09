@@ -1,6 +1,9 @@
-ackage com.example.restaurantmanagement.entity.enums;
+package com.example.restaurantmanagement.entity.enums;
+
 public enum PaymentMethod {
-    CASH,
-    CARD,
-    TRANSFER
+    tien_mat,
+    the,
+    chuyen_khoan,
+    vi_dien_tu
 }
+

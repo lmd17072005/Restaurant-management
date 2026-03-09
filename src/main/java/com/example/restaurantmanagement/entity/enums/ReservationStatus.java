@@ -1,7 +1,10 @@
-ackage com.example.restaurantmanagement.entity.enums;
+package com.example.restaurantmanagement.entity.enums;
+
 public enum ReservationStatus {
-    PENDING,
-    CONFIRMED,
-    CANCELLED,
-    COMPLETED
+    cho_xac_nhan,
+    da_xac_nhan,
+    da_huy,
+    khach_den,
+    khach_khong_den
 }
+

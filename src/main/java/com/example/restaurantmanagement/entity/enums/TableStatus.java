@@ -1,6 +1,9 @@
-ackage com.example.restaurantmanagement.entity.enums;
+package com.example.restaurantmanagement.entity.enums;
+
 public enum TableStatus {
-    AVAILABLE,
-    OCCUPIED,
-    RESERVED
+    trong,
+    da_dat,
+    dang_phuc_vu,
+    bao_tri
 }
+
