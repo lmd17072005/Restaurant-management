@@ -1,20 +1,32 @@
-ackage com.example.restaurantmanagement.entity;
+package com.example.restaurantmanagement.entity;
+
 import com.example.restaurantmanagement.entity.enums.TableStatus;
 import jakarta.persistence.*;
 import lombok.*;
+
 @Entity
-@Table(name = "restaurant_tables")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class RestaurantTable extends BaseEntity {
+@Table(name = "ban_an")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class RestaurantTable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(name = "table_number", nullable = false, unique = true)
-    private Integer tableNumber;
-    @Column(nullable = false)
+    @Column(name = "ban_id")
+    private Integer id;
+
+    @Column(name = "ma_ban", nullable = false, unique = true, length = 10)
+    private String tableCode;
+
+    @Column(name = "suc_chua", nullable = false)
     private Integer capacity;
+
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "trang_thai", nullable = false)
     @Builder.Default
-    private TableStatus status = TableStatus.AVAILABLE;
+    private TableStatus status = TableStatus.trong;
 }
+

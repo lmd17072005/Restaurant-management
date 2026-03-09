@@ -1,18 +1,29 @@
 package com.example.restaurantmanagement.dto.response;
+
 import com.example.restaurantmanagement.entity.enums.ReservationStatus;
 import lombok.*;
+
 import java.time.LocalDateTime;
-@Data @NoArgsConstructor @AllArgsConstructor @Builder
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ReservationResponse {
     private Long id;
+    private Integer tableId;
+    private String tableCode;
+    private Long customerId;
     private String customerName;
-    private String customerPhone;
-    private Long tableId;
-    private Integer tableNumber;
-    private LocalDateTime reservationTime;
     private Integer numberOfGuests;
-    private ReservationStatus status;
+    private LocalDateTime reservationTime;
     private String note;
+    private ReservationStatus status;
+    private Long createdById;
+    private String createdByName;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private Long confirmedById;
+    private String confirmedByName;
+    private LocalDateTime confirmedAt;
 }
+

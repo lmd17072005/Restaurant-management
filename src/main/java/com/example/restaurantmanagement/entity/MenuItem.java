@@ -1,26 +1,46 @@
-ackage com.example.restaurantmanagement.entity;
+package com.example.restaurantmanagement.entity;
+
+import com.example.restaurantmanagement.entity.enums.MenuItemStatus;
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 @Entity
-@Table(name = "menu_items")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
-public class MenuItem extends BaseEntity {
+@Table(name = "mon_an")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class MenuItem {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(nullable = false)
-    private String name;
-    @Column(columnDefinition = "TEXT")
-    private String description;
-    @Column(nullable = false, precision = 12, scale = 2)
-    private BigDecimal price;
-    @Column(name = "image_url")
-    private String imageUrl;
+    @Column(name = "mon_id")
+    private Integer id;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name = "danh_muc_id", nullable = false)
     private Category category;
-    @Column(name = "is_available", nullable = false)
+
+    @Column(name = "ten_mon", nullable = false, length = 150)
+    private String name;
+
+    @Column(name = "gia", nullable = false, precision = 12, scale = 2)
+    private BigDecimal price;
+
+    @Column(name = "hinh_anh", length = 500)
+    private String imageUrl;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "trang_thai", nullable = false)
     @Builder.Default
-    private Boolean isAvailable = true;
+    private MenuItemStatus status = MenuItemStatus.con_ban;
+
+    @Column(name = "ngay_tao", nullable = false, updatable = false)
+    @Builder.Default
+    private LocalDateTime createdAt = LocalDateTime.now();
 }
+

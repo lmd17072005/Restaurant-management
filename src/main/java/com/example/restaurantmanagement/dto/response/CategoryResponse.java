@@ -1,11 +1,15 @@
 package com.example.restaurantmanagement.dto.response;
+
+import com.example.restaurantmanagement.entity.enums.CategoryStatus;
 import lombok.*;
-import java.time.LocalDateTime;
-@Data @NoArgsConstructor @AllArgsConstructor @Builder
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class CategoryResponse {
-    private Long id;
+    private Integer id;
     private String name;
-    private String description;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private CategoryStatus status;
 }
+

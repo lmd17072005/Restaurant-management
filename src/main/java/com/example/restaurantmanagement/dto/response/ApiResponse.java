@@ -1,29 +1,53 @@
 package com.example.restaurantmanagement.dto.response;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.Map;
-@Data @NoArgsConstructor @AllArgsConstructor @Builder
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ApiResponse<T> {
+
+    private boolean success;
     private int status;
     private String message;
     private T data;
     private Map<String, String> errors;
     private LocalDateTime timestamp;
+
     public static <T> ApiResponse<T> success(T data) {
-        return ApiResponse.<T>builder().status(200).message("Success").data(data).timestamp(LocalDateTime.now()).build();
+        return ApiResponse.<T>builder()
+                .success(true).status(200).message("Success")
+                .data(data).timestamp(LocalDateTime.now()).build();
     }
+
     public static <T> ApiResponse<T> success(String message, T data) {
-        return ApiResponse.<T>builder().status(200).message(message).data(data).timestamp(LocalDateTime.now()).build();
+        return ApiResponse.<T>builder()
+                .success(true).status(200).message(message)
+                .data(data).timestamp(LocalDateTime.now()).build();
     }
+
     public static <T> ApiResponse<T> created(T data) {
-        return ApiResponse.<T>builder().status(201).message("Created successfully").data(data).timestamp(LocalDateTime.now()).build();
+        return ApiResponse.<T>builder()
+                .success(true).status(201).message("Created successfully")
+                .data(data).timestamp(LocalDateTime.now()).build();
     }
+
     public static <T> ApiResponse<T> error(int status, String message) {
-        return ApiResponse.<T>builder().status(status).message(message).timestamp(LocalDateTime.now()).build();
+        return ApiResponse.<T>builder()
+                .success(false).status(status).message(message)
+                .timestamp(LocalDateTime.now()).build();
     }
+
     public static <T> ApiResponse<T> error(int status, String message, Map<String, String> errors) {
-        return ApiResponse.<T>builder().status(status).message(message).errors(errors).timestamp(LocalDateTime.now()).build();
+        return ApiResponse.<T>builder()
+                .success(false).status(status).message(message)
+                .errors(errors).timestamp(LocalDateTime.now()).build();
     }
 }
+
