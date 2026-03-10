@@ -4,6 +4,8 @@ import com.example.restaurantmanagement.entity.enums.Role;
 import com.example.restaurantmanagement.entity.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,7 +29,8 @@ public class User implements UserDetails {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "vai_tro", nullable = false)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "vai_tro", nullable = false, columnDefinition = "vai_tro_enum")
     private Role role;
 
     @Column(name = "ho_ten", nullable = false, length = 100)
@@ -46,7 +49,8 @@ public class User implements UserDetails {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "trang_thai", nullable = false)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    @Column(name = "trang_thai", nullable = false, columnDefinition = "trang_thai_nguoi_dung_enum")
     @Builder.Default
     private UserStatus status = UserStatus.hoat_dong;
 
@@ -81,4 +85,3 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() { return status == UserStatus.hoat_dong; }
 }
-
