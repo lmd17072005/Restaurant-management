@@ -20,6 +20,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         types:
+          use_national_character_data_types: true
+          prefer_native_enum_types: false
           use_jdbc_metadata_defaults: false
         format_sql: true
     open-in-view: false

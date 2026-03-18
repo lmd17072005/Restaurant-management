@@ -1,8 +1,13 @@
 package com.example.restaurantmanagement.entity;
 
 import com.example.restaurantmanagement.entity.enums.MenuItemStatus;
+import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnTransformer;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Type;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -34,8 +39,11 @@ public class MenuItem {
     @Column(name = "hinh_anh", length = 500)
     private String imageUrl;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "trang_thai", nullable = false)
+    @Column(name = "trang_thai", nullable = false, columnDefinition = "trang_thai_mon_enum")
+    @ColumnTransformer(
+            write = "?::trang_thai_mon_enum",
+            read = "trang_thai::text"
+    )
     @Builder.Default
     private MenuItemStatus status = MenuItemStatus.con_ban;
 
