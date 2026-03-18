@@ -25,22 +25,26 @@ public class MenuItemServiceImpl implements MenuItemService {
     private final MenuItemMapper menuItemMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public List<MenuItemResponse> getAllMenuItems() {
         return menuItemMapper.toResponseList(menuItemRepository.findAll());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public MenuItemResponse getMenuItemById(Integer id) {
         return menuItemMapper.toResponse(menuItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("MenuItem", "id", id)));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MenuItemResponse> getMenuItemsByCategory(Integer categoryId) {
         return menuItemMapper.toResponseList(menuItemRepository.findByCategoryId(categoryId));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MenuItemResponse> searchMenuItems(String keyword) {
         return menuItemMapper.toResponseList(menuItemRepository.findByNameContainingIgnoreCase(keyword));
     }
