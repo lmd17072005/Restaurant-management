@@ -32,20 +32,20 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationMapper reservationMapper;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ReservationResponse> getAllReservations() {
         return reservationMapper.toResponseList(reservationRepository.findAll());
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public ReservationResponse getReservationById(Long id) {
         return reservationMapper.toResponse(reservationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Reservation", "id", id)));
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ReservationResponse> getReservationsByStatus(ReservationStatus status) {
         return reservationMapper.toResponseList(reservationRepository.findByStatus(status));
     }

@@ -1,0 +1,17 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/resources/*.yaml
+!**/src/main/resources/*.yml
+!**/src/main/resources/*.properties
+.mvn/
+mvnw
+mvnw.cmd
+.git/
+.gitignore
+.idea/
+.vscode/
+*.iml
+*.md
+Dockerfile
+docker-compose.yml
+.dockerignore

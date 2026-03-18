@@ -28,20 +28,20 @@ public class RecipeServiceImpl implements RecipeService {
     private final RecipeMapper recipeMapper;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<RecipeResponse> getAllRecipes() {
         return recipeMapper.toResponseList(recipeRepository.findAll());
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public RecipeResponse getRecipeById(Long id) {
         return recipeMapper.toResponse(recipeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Recipe", "id", id)));
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<RecipeResponse> getRecipesByMenuItem(Integer menuItemId) {
         return recipeMapper.toResponseList(recipeRepository.findByMenuItemId(menuItemId));
     }

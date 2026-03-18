@@ -35,20 +35,20 @@ public class InvoiceServiceImpl implements InvoiceService {
     private final InvoiceMapper invoiceMapper;
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<InvoiceResponse> getAllInvoices() {
         return invoiceMapper.toResponseList(invoiceRepository.findAll());
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public InvoiceResponse getInvoiceById(Long id) {
         return invoiceMapper.toResponse(invoiceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Invoice", "id", id)));
     }
 
     @Override
-    @Transactional
+    @Transactional(readOnly = true)
     public List<InvoiceResponse> getInvoicesByStatus(InvoiceStatus status) {
         return invoiceMapper.toResponseList(invoiceRepository.findByStatus(status));
     }
