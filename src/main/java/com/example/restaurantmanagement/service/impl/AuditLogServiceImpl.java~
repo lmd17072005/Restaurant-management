@@ -19,20 +19,32 @@ public class AuditLogServiceImpl implements AuditLogService {
     private final AuditLogMapper auditLogMapper;
 
     @Override
+<<<<<<< HEAD
     @Transactional
+=======
+    @Transactional(readOnly = true)
+>>>>>>> docker-test
     public List<AuditLogResponse> getAllLogs() {
         return auditLogMapper.toResponseList(auditLogRepository.findAll());
     }
 
     @Override
+<<<<<<< HEAD
     @Transactional
+=======
+    @Transactional(readOnly = true)
+>>>>>>> docker-test
     public AuditLogResponse getLogById(Long id) {
         return auditLogMapper.toResponse(auditLogRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("AuditLog", "id", id)));
     }
 
     @Override
+<<<<<<< HEAD
     @Transactional
+=======
+    @Transactional(readOnly = true)
+>>>>>>> docker-test
     public List<AuditLogResponse> getLogsByTableAndRecord(String tableName, Long recordId) {
         return auditLogMapper.toResponseList(auditLogRepository.findByTableNameAndRecordId(tableName, recordId));
     }

@@ -27,17 +27,20 @@ public class InventoryHistoryServiceImpl implements InventoryHistoryService {
     private final InventoryHistoryMapper inventoryHistoryMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public List<InventoryHistoryResponse> getAllHistories() {
         return inventoryHistoryMapper.toResponseList(inventoryHistoryRepository.findAll());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public InventoryHistoryResponse getHistoryById(Long id) {
         return inventoryHistoryMapper.toResponse(inventoryHistoryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("InventoryHistory", "id", id)));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<InventoryHistoryResponse> getHistoriesByIngredient(Integer ingredientId) {
         return inventoryHistoryMapper.toResponseList(inventoryHistoryRepository.findByIngredientId(ingredientId));
     }

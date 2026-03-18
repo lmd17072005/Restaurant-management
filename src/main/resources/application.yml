@@ -1,16 +1,28 @@
 server:
-  port: 8080
-
+  port: 8081
+  address: 0.0.0.0
 spring:
   datasource:
     url: jdbc:postgresql://aws-1-ap-southeast-2.pooler.supabase.com:6543/postgres
     username: postgres.flqdiseebhqbpfnmnoqv
     password: Thanhxuantrung123
     driver-class-name: org.postgresql.Driver
+    hikari:
+      auto-commit: false
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
   jpa:
     show-sql: true
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        types:
+          use_national_character_data_types: true
+          prefer_native_enum_types: false
+          use_jdbc_metadata_defaults: false
         format_sql: true
     open-in-view: false
   sql:
@@ -20,7 +32,7 @@ spring:
 application:
   security:
     jwt:
-      secret-key: YOUR_JWT_SECRET_KEY_AT_LEAST_256_BITS_LONG_CHANGE_ME_IN_PRODUCTION
+      secret-key: "TXlTdXBlclNlY3JldEtleVRoYXRJc0F0TGVhc3QyNTZCaXRzTG9uZ0FuZElzUHJvcGVybHlCYXNlNjRFbmNvZGVk"
       expiration: 86400000       # 1 day
       refresh-expiration: 604800000  # 7 days
 

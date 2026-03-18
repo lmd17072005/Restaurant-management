@@ -44,4 +44,4 @@ public class Ingredient {
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 }
-
+;

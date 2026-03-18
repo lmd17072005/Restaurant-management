@@ -32,22 +32,26 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public List<OrderResponse> getAllOrders() {
         return orderMapper.toResponseList(orderRepository.findAll());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public OrderResponse getOrderById(Long id) {
         return orderMapper.toResponse(orderRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Order", "id", id)));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<OrderResponse> getOrdersByInvoice(Long invoiceId) {
         return orderMapper.toResponseList(orderRepository.findByInvoiceId(invoiceId));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<OrderResponse> getOrdersByStatus(OrderStatus status) {
         return orderMapper.toResponseList(orderRepository.findByStatus(status));
     }

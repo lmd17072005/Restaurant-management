@@ -1,0 +1,11 @@
+services:
+  backend:
+    build: .
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-ap-southeast-2.pooler.supabase.com:6543/postgres?prepareThreshold=0
+      - SPRING_DATASOURCE_USERNAME=postgres.flqdiseebhqbpfnmnoqv
+      - SPRING_DATASOURCE_PASSWORD=Thanhxuantrung123
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+    restart: always

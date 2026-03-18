@@ -25,22 +25,26 @@ public class MenuItemServiceImpl implements MenuItemService {
     private final MenuItemMapper menuItemMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public List<MenuItemResponse> getAllMenuItems() {
         return menuItemMapper.toResponseList(menuItemRepository.findAll());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public MenuItemResponse getMenuItemById(Integer id) {
         return menuItemMapper.toResponse(menuItemRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("MenuItem", "id", id)));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MenuItemResponse> getMenuItemsByCategory(Integer categoryId) {
         return menuItemMapper.toResponseList(menuItemRepository.findByCategoryId(categoryId));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MenuItemResponse> searchMenuItems(String keyword) {
         return menuItemMapper.toResponseList(menuItemRepository.findByNameContainingIgnoreCase(keyword));
     }
@@ -77,6 +81,32 @@ public class MenuItemServiceImpl implements MenuItemService {
             throw new ResourceNotFoundException("MenuItem", "id", id);
         }
         menuItemRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public MenuItemResponse updateMenuItemStatus(Integer id, MenuItemStatus status) {
+        MenuItem menuItem = menuItemRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("MenuItem", "id", id));
+        menuItem.setStatus(status);
+        return menuItemMapper.toResponse(menuItemRepository.save(menuItem));
+    }
+
+    @Override
+    public List<MenuItemResponse> getAvailableMenuItems() {
+        return menuItemMapper.toResponseList(menuItemRepository.findByStatus(MenuItemStatus.con_ban));
+    }
+
+    @Override
+    public List<MenuItemResponse> getAvailableMenuItemsByCategory(Integer categoryId) {
+        return menuItemMapper.toResponseList(
+                menuItemRepository.findByStatusAndCategoryId(MenuItemStatus.con_ban, categoryId));
+    }
+
+    @Override
+    public List<MenuItemResponse> searchAvailableMenuItems(String keyword) {
+        return menuItemMapper.toResponseList(
+                menuItemRepository.findByNameContainingIgnoreCaseAndStatus(keyword, MenuItemStatus.con_ban));
     }
 }
 
