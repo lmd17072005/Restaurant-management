@@ -2,6 +2,7 @@ package com.example.restaurantmanagement.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -23,6 +24,7 @@ public class RegisterRequest {
     private String fullName;
 
     @Size(max = 20)
+    @Pattern(regexp = "^\\d+$", message = "Phone must contain digits only")
     private String phone;
 
     @Email(message = "Invalid email format")

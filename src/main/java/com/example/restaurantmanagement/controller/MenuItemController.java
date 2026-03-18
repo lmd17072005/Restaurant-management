@@ -3,6 +3,7 @@ package com.example.restaurantmanagement.controller;
 import com.example.restaurantmanagement.dto.request.MenuItemRequest;
 import com.example.restaurantmanagement.dto.response.ApiResponse;
 import com.example.restaurantmanagement.dto.response.MenuItemResponse;
+import com.example.restaurantmanagement.entity.enums.MenuItemStatus;
 import com.example.restaurantmanagement.service.MenuItemService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -67,6 +68,33 @@ public class MenuItemController {
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Integer id) {
         menuItemService.deleteMenuItem(id);
         return ResponseEntity.ok(ApiResponse.success("Deleted", null));
+    }
+
+    @PatchMapping("/{id}/status")
+    @PreAuthorize("hasAnyRole('QUAN_LY','NHAN_VIEN')")
+    @Operation(summary = "Update menu item status (het_mon, ngung_ban, con_ban)")
+    public ResponseEntity<ApiResponse<MenuItemResponse>> updateStatus(
+            @PathVariable Integer id,
+            @RequestParam MenuItemStatus status) {
+        return ResponseEntity.ok(ApiResponse.success("Status updated", menuItemService.updateMenuItemStatus(id, status)));
+    }
+
+    @GetMapping("/available")
+    @Operation(summary = "Get all available menu items (con_ban only)")
+    public ResponseEntity<ApiResponse<List<MenuItemResponse>>> getAvailable() {
+        return ResponseEntity.ok(ApiResponse.success(menuItemService.getAvailableMenuItems()));
+    }
+
+    @GetMapping("/available/category/{categoryId}")
+    @Operation(summary = "Get available menu items by category")
+    public ResponseEntity<ApiResponse<List<MenuItemResponse>>> getAvailableByCategory(@PathVariable Integer categoryId) {
+        return ResponseEntity.ok(ApiResponse.success(menuItemService.getAvailableMenuItemsByCategory(categoryId)));
+    }
+
+    @GetMapping("/available/search")
+    @Operation(summary = "Search available menu items")
+    public ResponseEntity<ApiResponse<List<MenuItemResponse>>> searchAvailable(@RequestParam String keyword) {
+        return ResponseEntity.ok(ApiResponse.success(menuItemService.searchAvailableMenuItems(keyword)));
     }
 }
 
