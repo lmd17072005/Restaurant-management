@@ -23,11 +23,13 @@ public class IngredientServiceImpl implements IngredientService {
     private final IngredientMapper ingredientMapper;
 
     @Override
+    @Transactional
     public List<IngredientResponse> getAllIngredients() {
         return ingredientMapper.toResponseList(ingredientRepository.findAll());
     }
 
     @Override
+    @Transactional
     public IngredientResponse getIngredientById(Integer id) {
         return ingredientMapper.toResponse(ingredientRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Ingredient", "id", id)));

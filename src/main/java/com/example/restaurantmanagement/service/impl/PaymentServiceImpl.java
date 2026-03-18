@@ -29,17 +29,20 @@ public class PaymentServiceImpl implements PaymentService {
     private final PaymentMapper paymentMapper;
 
     @Override
+    @Transactional
     public List<PaymentResponse> getAllPayments() {
         return paymentMapper.toResponseList(paymentRepository.findAll());
     }
 
     @Override
+    @Transactional
     public PaymentResponse getPaymentById(Long id) {
         return paymentMapper.toResponse(paymentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Payment", "id", id)));
     }
 
     @Override
+    @Transactional
     public List<PaymentResponse> getPaymentsByInvoice(Long invoiceId) {
         return paymentMapper.toResponseList(paymentRepository.findByInvoiceId(invoiceId));
     }

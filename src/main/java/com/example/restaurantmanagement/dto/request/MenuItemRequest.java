@@ -1,6 +1,8 @@
 package com.example.restaurantmanagement.dto.request;
 
 import com.example.restaurantmanagement.entity.enums.MenuItemStatus;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -28,6 +30,7 @@ public class MenuItemRequest {
     @Size(max = 500)
     private String imageUrl;
 
+    @Enumerated(EnumType.STRING)
     private MenuItemStatus status;
 }
 
