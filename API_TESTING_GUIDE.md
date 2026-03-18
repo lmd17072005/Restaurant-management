@@ -4,6 +4,12 @@
 **API Documentation:** `http://localhost:8081/swagger-ui/index.html`
 **OpenAPI JSON:** `http://localhost:8081/api-docs`
 
+> [!TIP]
+> **Getting "Socket Hang Up" in Postman?**
+> 1. **Wait for startup**: The app takes 1-2 minutes to connect to Supabase. Check logs: `docker compose logs -f backend`.
+> 2. **Check Port**: Ensure you are using `8081`, not `8080`.
+> 3. **Docker Running?**: Ensure your container is "Running" in Docker Desktop.
+
 ---
 
 ## Table of Contents
