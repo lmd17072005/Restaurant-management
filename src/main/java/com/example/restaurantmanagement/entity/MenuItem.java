@@ -1,7 +1,6 @@
 package com.example.restaurantmanagement.entity;
 
 import com.example.restaurantmanagement.entity.enums.MenuItemStatus;
-import io.hypersistence.utils.hibernate.type.basic.PostgreSQLEnumType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnTransformer;

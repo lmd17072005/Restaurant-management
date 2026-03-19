@@ -32,7 +32,7 @@ spring:
 application:
   security:
     jwt:
-      secret-key: "TXlTdXBlclNlY3JldEtleVRoYXRJc0F0TGVhc3QyNTZCaXRzTG9uZ0FuZElzUHJvcGVybHlCYXNlNjRFbmNvZGVk"
+      secret-key: YOUR_JWT_SECRET_KEY_AT_LEAST_256_BITS_LONG_CHANGE_ME_IN_PRODUCTION
       expiration: 86400000       # 1 day
       refresh-expiration: 604800000  # 7 days
 
