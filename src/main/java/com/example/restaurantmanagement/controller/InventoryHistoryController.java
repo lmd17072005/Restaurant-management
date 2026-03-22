@@ -4,6 +4,7 @@ import com.example.restaurantmanagement.dto.request.InventoryHistoryRequest;
 import com.example.restaurantmanagement.dto.response.ApiResponse;
 import com.example.restaurantmanagement.dto.response.InventoryHistoryResponse;
 import com.example.restaurantmanagement.service.InventoryHistoryService;
+import com.example.restaurantmanagement.entity.enums.NotificationMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -48,7 +49,7 @@ public class InventoryHistoryController {
     @PreAuthorize("hasAnyRole('QUAN_LY','NHAN_VIEN')")
     @Operation(summary = "Create inventory history (nhap/xuat/dieu_chinh)")
     public ResponseEntity<ApiResponse<InventoryHistoryResponse>> create(@Valid @RequestBody InventoryHistoryRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(inventoryHistoryService.createHistory(request)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(NotificationMessage.INVENTORY_HISTORY_CREATED_SUCCESS, inventoryHistoryService.createHistory(request)));
     }
 }
 

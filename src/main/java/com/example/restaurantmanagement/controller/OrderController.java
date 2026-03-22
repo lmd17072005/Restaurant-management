@@ -5,6 +5,7 @@ import com.example.restaurantmanagement.dto.response.ApiResponse;
 import com.example.restaurantmanagement.dto.response.OrderResponse;
 import com.example.restaurantmanagement.entity.enums.OrderStatus;
 import com.example.restaurantmanagement.service.OrderService;
+import com.example.restaurantmanagement.entity.enums.NotificationMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -56,14 +57,14 @@ public class OrderController {
     @PreAuthorize("hasAnyRole('QUAN_LY','NHAN_VIEN')")
     @Operation(summary = "Create order")
     public ResponseEntity<ApiResponse<OrderResponse>> create(@Valid @RequestBody OrderRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(orderService.createOrder(request)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(NotificationMessage.ORDER_CREATED_SUCCESS, orderService.createOrder(request)));
     }
 
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasAnyRole('QUAN_LY','NHAN_VIEN')")
     @Operation(summary = "Update order status")
     public ResponseEntity<ApiResponse<OrderResponse>> updateStatus(@PathVariable Long id, @RequestParam OrderStatus status) {
-        return ResponseEntity.ok(ApiResponse.success("Status updated", orderService.updateOrderStatus(id, status)));
+        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.ORDER_STATUS_UPDATED_SUCCESS, orderService.updateOrderStatus(id, status)));
     }
 
     @DeleteMapping("/{id}")
@@ -71,7 +72,7 @@ public class OrderController {
     @Operation(summary = "Delete order")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
         orderService.deleteOrder(id);
-        return ResponseEntity.ok(ApiResponse.success("Deleted", null));
+        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.ORDER_DELETED_SUCCESS, null));
     }
 }
 

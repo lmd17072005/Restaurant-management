@@ -4,6 +4,7 @@ import com.example.restaurantmanagement.dto.request.PaymentRequest;
 import com.example.restaurantmanagement.dto.response.ApiResponse;
 import com.example.restaurantmanagement.dto.response.PaymentResponse;
 import com.example.restaurantmanagement.service.PaymentService;
+import com.example.restaurantmanagement.entity.enums.NotificationMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -48,7 +49,7 @@ public class PaymentController {
     @PreAuthorize("hasAnyRole('QUAN_LY','NHAN_VIEN')")
     @Operation(summary = "Create payment")
     public ResponseEntity<ApiResponse<PaymentResponse>> create(@Valid @RequestBody PaymentRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(paymentService.createPayment(request)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(NotificationMessage.PAYMENT_CREATED_SUCCESS, paymentService.createPayment(request)));
     }
 }
 
