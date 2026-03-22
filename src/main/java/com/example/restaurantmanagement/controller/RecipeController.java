@@ -4,6 +4,7 @@ import com.example.restaurantmanagement.dto.request.RecipeRequest;
 import com.example.restaurantmanagement.dto.response.ApiResponse;
 import com.example.restaurantmanagement.dto.response.RecipeResponse;
 import com.example.restaurantmanagement.service.RecipeService;
+import com.example.restaurantmanagement.entity.enums.NotificationMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -48,14 +49,14 @@ public class RecipeController {
     @PreAuthorize("hasAnyRole('QUAN_LY','NHAN_VIEN')")
     @Operation(summary = "Create recipe")
     public ResponseEntity<ApiResponse<RecipeResponse>> create(@Valid @RequestBody RecipeRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(recipeService.createRecipe(request)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(NotificationMessage.RECIPE_CREATED_SUCCESS, recipeService.createRecipe(request)));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('QUAN_LY','NHAN_VIEN')")
     @Operation(summary = "Update recipe")
     public ResponseEntity<ApiResponse<RecipeResponse>> update(@PathVariable Long id, @Valid @RequestBody RecipeRequest request) {
-        return ResponseEntity.ok(ApiResponse.success("Updated", recipeService.updateRecipe(id, request)));
+        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.RECIPE_UPDATED_SUCCESS, recipeService.updateRecipe(id, request)));
     }
 
     @DeleteMapping("/{id}")
@@ -63,7 +64,7 @@ public class RecipeController {
     @Operation(summary = "Delete recipe")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
         recipeService.deleteRecipe(id);
-        return ResponseEntity.ok(ApiResponse.success("Deleted", null));
+        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.RECIPE_DELETED_SUCCESS, null));
     }
 }
 

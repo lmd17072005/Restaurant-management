@@ -4,6 +4,7 @@ import com.example.restaurantmanagement.dto.request.IngredientRequest;
 import com.example.restaurantmanagement.dto.response.ApiResponse;
 import com.example.restaurantmanagement.dto.response.IngredientResponse;
 import com.example.restaurantmanagement.service.IngredientService;
+import com.example.restaurantmanagement.entity.enums.NotificationMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -41,14 +42,14 @@ public class IngredientController {
     @PreAuthorize("hasAnyRole('QUAN_LY','NHAN_VIEN')")
     @Operation(summary = "Create ingredient")
     public ResponseEntity<ApiResponse<IngredientResponse>> create(@Valid @RequestBody IngredientRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(ingredientService.createIngredient(request)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(NotificationMessage.INGREDIENT_CREATED_SUCCESS, ingredientService.createIngredient(request)));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('QUAN_LY','NHAN_VIEN')")
     @Operation(summary = "Update ingredient")
     public ResponseEntity<ApiResponse<IngredientResponse>> update(@PathVariable Integer id, @Valid @RequestBody IngredientRequest request) {
-        return ResponseEntity.ok(ApiResponse.success("Updated", ingredientService.updateIngredient(id, request)));
+        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.INGREDIENT_UPDATED_SUCCESS, ingredientService.updateIngredient(id, request)));
     }
 
     @DeleteMapping("/{id}")
@@ -56,7 +57,7 @@ public class IngredientController {
     @Operation(summary = "Delete ingredient")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Integer id) {
         ingredientService.deleteIngredient(id);
-        return ResponseEntity.ok(ApiResponse.success("Deleted", null));
+        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.INGREDIENT_DELETED_SUCCESS, null));
     }
 }
 
