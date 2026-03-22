@@ -24,7 +24,7 @@ public class MenuItemController {
 
     private final MenuItemService menuItemService;
 
-    @GetMapping
+    @GetMapping //da get duoc
     @Operation(summary = "Get all menu items")
     public ResponseEntity<ApiResponse<List<MenuItemResponse>>> getAll() {
         return ResponseEntity.ok(ApiResponse.success(menuItemService.getAllMenuItems()));
@@ -44,7 +44,7 @@ public class MenuItemController {
 
     @GetMapping("/search")
     @Operation(summary = "Search menu items")
-    public ResponseEntity<ApiResponse<List<MenuItemResponse>>> search(@RequestParam String keyword) {
+    public ResponseEntity<ApiResponse<List<MenuItemResponse>>> search(@RequestParam(defaultValue = "") String keyword) {
         return ResponseEntity.ok(ApiResponse.success(menuItemService.searchMenuItems(keyword)));
     }
 
@@ -91,9 +91,9 @@ public class MenuItemController {
         return ResponseEntity.ok(ApiResponse.success(menuItemService.getAvailableMenuItemsByCategory(categoryId)));
     }
 
-    @GetMapping("/available/search")
+    @GetMapping("/available/search")   //da fix xong dung sua them
     @Operation(summary = "Search available menu items")
-    public ResponseEntity<ApiResponse<List<MenuItemResponse>>> searchAvailable(@RequestParam String keyword) {
+    public ResponseEntity<ApiResponse<List<MenuItemResponse>>> searchAvailable(@RequestParam(defaultValue = "") String keyword) {
         return ResponseEntity.ok(ApiResponse.success(menuItemService.searchAvailableMenuItems(keyword)));
     }
 }

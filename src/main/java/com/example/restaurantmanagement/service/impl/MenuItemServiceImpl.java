@@ -93,17 +93,20 @@ public class MenuItemServiceImpl implements MenuItemService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MenuItemResponse> getAvailableMenuItems() {
         return menuItemMapper.toResponseList(menuItemRepository.findByStatus(MenuItemStatus.con_ban));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MenuItemResponse> getAvailableMenuItemsByCategory(Integer categoryId) {
         return menuItemMapper.toResponseList(
                 menuItemRepository.findByStatusAndCategoryId(MenuItemStatus.con_ban, categoryId));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<MenuItemResponse> searchAvailableMenuItems(String keyword) {
         return menuItemMapper.toResponseList(
                 menuItemRepository.findByNameContainingIgnoreCaseAndStatus(keyword, MenuItemStatus.con_ban));
