@@ -4,6 +4,7 @@ import com.example.restaurantmanagement.dto.request.CategoryRequest;
 import com.example.restaurantmanagement.dto.response.ApiResponse;
 import com.example.restaurantmanagement.dto.response.CategoryResponse;
 import com.example.restaurantmanagement.service.CategoryService;
+import com.example.restaurantmanagement.entity.enums.NotificationMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -39,14 +40,14 @@ public class CategoryController {
     @PreAuthorize("hasAnyRole('QUAN_LY','NHAN_VIEN')")
     @Operation(summary = "Create category")
     public ResponseEntity<ApiResponse<CategoryResponse>> create(@Valid @RequestBody CategoryRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(categoryService.createCategory(request)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(NotificationMessage.CATEGORY_CREATED_SUCCESS, categoryService.createCategory(request)));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('QUAN_LY','NHAN_VIEN')")
     @Operation(summary = "Update category")
     public ResponseEntity<ApiResponse<CategoryResponse>> update(@PathVariable Integer id, @Valid @RequestBody CategoryRequest request) {
-        return ResponseEntity.ok(ApiResponse.success("Updated", categoryService.updateCategory(id, request)));
+        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.CATEGORY_UPDATED_SUCCESS, categoryService.updateCategory(id, request)));
     }
 
     @DeleteMapping("/{id}")
@@ -54,7 +55,7 @@ public class CategoryController {
     @Operation(summary = "Delete category")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Integer id) {
         categoryService.deleteCategory(id);
-        return ResponseEntity.ok(ApiResponse.success("Deleted", null));
+        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.CATEGORY_DELETED_SUCCESS, null));
     }
 }
 

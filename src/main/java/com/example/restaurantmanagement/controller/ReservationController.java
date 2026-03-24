@@ -5,6 +5,7 @@ import com.example.restaurantmanagement.dto.response.ApiResponse;
 import com.example.restaurantmanagement.dto.response.ReservationResponse;
 import com.example.restaurantmanagement.entity.enums.ReservationStatus;
 import com.example.restaurantmanagement.service.ReservationService;
+import com.example.restaurantmanagement.entity.enums.NotificationMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -45,21 +46,21 @@ public class ReservationController {
     @PostMapping
     @Operation(summary = "Create reservation")
     public ResponseEntity<ApiResponse<ReservationResponse>> create(@Valid @RequestBody ReservationRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(reservationService.createReservation(request)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(NotificationMessage.RESERVATION_CREATED_SUCCESS, reservationService.createReservation(request)));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('QUAN_LY','NHAN_VIEN')")
     @Operation(summary = "Update reservation")
     public ResponseEntity<ApiResponse<ReservationResponse>> update(@PathVariable Long id, @Valid @RequestBody ReservationRequest request) {
-        return ResponseEntity.ok(ApiResponse.success("Updated", reservationService.updateReservation(id, request)));
+        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.RESERVATION_UPDATED_SUCCESS, reservationService.updateReservation(id, request)));
     }
 
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasAnyRole('QUAN_LY','NHAN_VIEN')")
     @Operation(summary = "Update reservation status")
     public ResponseEntity<ApiResponse<ReservationResponse>> updateStatus(@PathVariable Long id, @RequestParam ReservationStatus status) {
-        return ResponseEntity.ok(ApiResponse.success("Status updated", reservationService.updateReservationStatus(id, status)));
+        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.RESERVATION_STATUS_UPDATED_SUCCESS, reservationService.updateReservationStatus(id, status)));
     }
 
     @DeleteMapping("/{id}")
@@ -67,7 +68,7 @@ public class ReservationController {
     @Operation(summary = "Delete reservation")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
         reservationService.deleteReservation(id);
-        return ResponseEntity.ok(ApiResponse.success("Deleted", null));
+        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.RESERVATION_DELETED_SUCCESS, null));
     }
 }
 

@@ -4,6 +4,7 @@ import com.example.restaurantmanagement.dto.response.ApiResponse;
 import com.example.restaurantmanagement.dto.response.UserResponse;
 import com.example.restaurantmanagement.entity.enums.Role;
 import com.example.restaurantmanagement.service.UserService;
+import com.example.restaurantmanagement.entity.enums.NotificationMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -46,7 +47,7 @@ public class UserController {
     @PreAuthorize("hasRole('QUAN_LY')")
     @Operation(summary = "Update user role")
     public ResponseEntity<ApiResponse<UserResponse>> updateRole(@PathVariable Long id, @RequestParam Role role) {
-        return ResponseEntity.ok(ApiResponse.success("Role updated", userService.updateRole(id, role)));
+        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.USER_ROLE_UPDATED_SUCCESS, userService.updateRole(id, role)));
     }
 
     @DeleteMapping("/{id}")
@@ -54,7 +55,7 @@ public class UserController {
     @Operation(summary = "Delete user")
     public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
-        return ResponseEntity.ok(ApiResponse.success("User deleted", null));
+        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.USER_DELETED_SUCCESS, null));
     }
 }
 

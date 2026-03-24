@@ -5,6 +5,7 @@ import com.example.restaurantmanagement.dto.response.ApiResponse;
 import com.example.restaurantmanagement.dto.response.TableResponse;
 import com.example.restaurantmanagement.entity.enums.TableStatus;
 import com.example.restaurantmanagement.service.TableService;
+import com.example.restaurantmanagement.entity.enums.NotificationMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -46,21 +47,21 @@ public class TableController {
     @PreAuthorize("hasRole('QUAN_LY')")
     @Operation(summary = "Create table")
     public ResponseEntity<ApiResponse<TableResponse>> create(@Valid @RequestBody TableRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(tableService.createTable(request)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(NotificationMessage.TABLE_CREATED_SUCCESS, tableService.createTable(request)));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('QUAN_LY')")
     @Operation(summary = "Update table")
     public ResponseEntity<ApiResponse<TableResponse>> update(@PathVariable Integer id, @Valid @RequestBody TableRequest request) {
-        return ResponseEntity.ok(ApiResponse.success("Updated", tableService.updateTable(id, request)));
+        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.TABLE_UPDATED_SUCCESS, tableService.updateTable(id, request)));
     }
 
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasAnyRole('QUAN_LY','NHAN_VIEN')")
     @Operation(summary = "Update table status")
     public ResponseEntity<ApiResponse<TableResponse>> updateStatus(@PathVariable Integer id, @RequestParam TableStatus status) {
-        return ResponseEntity.ok(ApiResponse.success("Status updated", tableService.updateTableStatus(id, status)));
+        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.TABLE_STATUS_UPDATED_SUCCESS, tableService.updateTableStatus(id, status)));
     }
 
     @DeleteMapping("/{id}")
@@ -68,7 +69,7 @@ public class TableController {
     @Operation(summary = "Delete table")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Integer id) {
         tableService.deleteTable(id);
-        return ResponseEntity.ok(ApiResponse.success("Deleted", null));
+        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.TABLE_DELETED_SUCCESS, null));
     }
 }
 

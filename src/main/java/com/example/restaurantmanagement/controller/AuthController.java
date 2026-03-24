@@ -5,6 +5,7 @@ import com.example.restaurantmanagement.dto.request.RegisterRequest;
 import com.example.restaurantmanagement.dto.response.ApiResponse;
 import com.example.restaurantmanagement.dto.response.AuthResponse;
 import com.example.restaurantmanagement.service.AuthService;
+import com.example.restaurantmanagement.entity.enums.NotificationMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -24,13 +25,13 @@ public class AuthController {
     @PostMapping("/register")
     @Operation(summary = "Register a new user")
     public ResponseEntity<ApiResponse<AuthResponse>> register(@Valid @RequestBody RegisterRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(authService.register(request)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(NotificationMessage.AUTH_REGISTER_SUCCESS, authService.register(request)));
     }
 
     @PostMapping("/login")
     @Operation(summary = "Login")
     public ResponseEntity<ApiResponse<AuthResponse>> login(@Valid @RequestBody LoginRequest request) {
-        return ResponseEntity.ok(ApiResponse.success("Login successful", authService.login(request)));
+        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.AUTH_LOGIN_SUCCESS, authService.login(request)));
     }
 }
 
