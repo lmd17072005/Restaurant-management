@@ -41,43 +41,29 @@ class AuthServiceImplTest {
 
 
     @Test
-    void register_ShouldThrowException_WhenUsernameExists() {
-        RegisterRequest request = new RegisterRequest();
-        request.setUsername("admin");
-
-        when(userRepository.existsByUsername("admin")).thenReturn(true);
-
-        DuplicateResourceException exception = assertThrows(DuplicateResourceException.class,
-                () -> authService.register(request));
-        assertTrue(exception.getMessage().contains("Username already exists"));
-    }
-
-    @Test
     void register_ShouldThrowException_WhenEmailExists() {
         RegisterRequest request = new RegisterRequest();
-        request.setUsername("newuser");
+        request.setName("New User");
         request.setEmail("test@gmail.com");
 
-        when(userRepository.existsByUsername("newuser")).thenReturn(false);
         when(userRepository.existsByEmail("test@gmail.com")).thenReturn(true);
 
         DuplicateResourceException exception = assertThrows(DuplicateResourceException.class,
                 () -> authService.register(request));
-        assertTrue(exception.getMessage().contains("Email already exists"));
+        assertTrue(exception.getMessage().contains("Email đã tồn tại"));
     }
 
     @Test
     void register_ShouldReturnAuthResponse_WhenDataIsValid() {
         // GIVEN: Phân nhánh 3 - Dữ liệu hoàn toàn hợp lệ
         RegisterRequest request = new RegisterRequest();
-        request.setUsername("newuser");
+        request.setName("New User");
         request.setPassword("123456");
         request.setEmail("new@gmail.com");
 
         User savedUser = new User();
-        savedUser.setUsername("newuser");
+        savedUser.setUsername("new@gmail.com");
 
-        when(userRepository.existsByUsername(anyString())).thenReturn(false);
         when(userRepository.existsByEmail(anyString())).thenReturn(false);
         when(passwordEncoder.encode(anyString())).thenReturn("hashedPassword");
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
@@ -100,15 +86,17 @@ class AuthServiceImplTest {
     void login_ShouldReturnAuthResponse_WhenCredentialsAreValid() {
         // GIVEN
         LoginRequest request = new LoginRequest();
-        request.setUsername("admin");
+        request.setEmail("admin@gmail.com");
         request.setPassword("123456");
 
         User mockUser = new User();
-        mockUser.setUsername("admin");
+        mockUser.setUsername("admin@gmail.com");
+        mockUser.setPassword("hashedPassword");
 
+        when(userRepository.findByEmail("admin@gmail.com")).thenReturn(Optional.of(mockUser));
+        when(passwordEncoder.matches("123456", "hashedPassword")).thenReturn(true);
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenReturn(null);
-        when(userRepository.findByUsername("admin")).thenReturn(Optional.of(mockUser));
         when(jwtUtil.generateToken(mockUser)).thenReturn("mock-jwt-token");
         when(userMapper.toResponse(mockUser)).thenReturn(new UserResponse());
 

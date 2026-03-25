@@ -6,6 +6,8 @@ import com.example.restaurantmanagement.dto.response.AuthResponse;
 import com.example.restaurantmanagement.entity.User;
 import com.example.restaurantmanagement.entity.enums.Role;
 import com.example.restaurantmanagement.exception.DuplicateResourceException;
+import com.example.restaurantmanagement.exception.ResourceNotFoundException;
+import com.example.restaurantmanagement.exception.BadRequestException;
 import com.example.restaurantmanagement.mapper.UserMapper;
 import com.example.restaurantmanagement.repository.UserRepository;
 import com.example.restaurantmanagement.security.JwtUtil;
@@ -30,17 +32,13 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public AuthResponse register(RegisterRequest request) {
-        if (userRepository.existsByUsername(request.getUsername())) {
-            throw new DuplicateResourceException("Username already exists: " + request.getUsername());
-        }
-        if (request.getEmail() != null && userRepository.existsByEmail(request.getEmail())) {
-            throw new DuplicateResourceException("Email already exists: " + request.getEmail());
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new DuplicateResourceException("EMAIL_EXISTS", "Email đã tồn tại");
         }
         User user = User.builder()
-                .username(request.getUsername())
+                .username(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .fullName(request.getFullName())
-                .phone(request.getPhone())
+                .fullName(request.getName())
                 .email(request.getEmail())
                 .role(Role.KHACH_HANG)
                 .build();
@@ -55,9 +53,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new ResourceNotFoundException("USER_NOT_FOUND", "Tài khoản không tồn tại"));
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            throw new BadRequestException("INVALID_PASSWORD", "Sai mật khẩu");
+        }
+
         authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
+                new UsernamePasswordAuthenticationToken(user.getUsername(), request.getPassword()));
+                
         String token = jwtUtil.generateToken(user);
         return AuthResponse.builder()
                 .accessToken(token)
