@@ -32,8 +32,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public AuthResponse register(RegisterRequest request) {
+        if (request.getEmail() == null || !request.getEmail().endsWith("@gmail.com")) {
+            throw new BadRequestException("Couldn't find available email , please use Google Gmail");
+        }
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new DuplicateResourceException("EMAIL_EXISTS", "Email đã tồn tại");
+            throw new DuplicateResourceException("This Email already exists ,please login again or use another email!");
         }
         User user = User.builder()
                 .username(request.getEmail())
@@ -54,10 +57,10 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("USER_NOT_FOUND", "Tài khoản không tồn tại"));
+                .orElseThrow(() -> new ResourceNotFoundException("This email does not exists, please check your email or create one!"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            throw new BadRequestException("INVALID_PASSWORD", "Sai mật khẩu");
+            throw new BadRequestException("Wrong password!");
         }
 
         authenticationManager.authenticate(
