@@ -44,6 +44,7 @@ public class DataSeeder implements CommandLineRunner {
             userRepository.save(staff);
             log.info("Default staff created: nhanvien01 / staff123");
         }
+
     }
 }
 
