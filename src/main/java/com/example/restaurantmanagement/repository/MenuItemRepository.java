@@ -10,9 +10,12 @@ import java.util.List;
 @Repository
 public interface MenuItemRepository extends JpaRepository<MenuItem, Integer> {
     List<MenuItem> findByCategoryId(Integer categoryId);
+
     List<MenuItem> findByStatus(MenuItemStatus status);
+
     List<MenuItem> findByStatusAndCategoryId(MenuItemStatus status, Integer categoryId);
+
     List<MenuItem> findByNameContainingIgnoreCase(String name);
+
     List<MenuItem> findByNameContainingIgnoreCaseAndStatus(String name, MenuItemStatus status);
 }
-
