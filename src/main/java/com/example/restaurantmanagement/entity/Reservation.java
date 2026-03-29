@@ -3,6 +3,7 @@ package com.example.restaurantmanagement.entity;
 import com.example.restaurantmanagement.entity.enums.ReservationStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnTransformer;
 
 import java.time.LocalDateTime;
 
@@ -38,7 +39,11 @@ public class Reservation {
     private String note;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "trang_thai", nullable = false)
+    @Column(name = "trang_thai", nullable = false, columnDefinition = "trang_thai_dat_ban_enum")
+    @ColumnTransformer(
+            write = "?::trang_thai_dat_ban_enum",
+            read = "trang_thai::text"
+    )
     @Builder.Default
     private ReservationStatus status = ReservationStatus.cho_xac_nhan;
 

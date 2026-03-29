@@ -4,6 +4,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import lombok.extern.jackson.Jacksonized;
 
 import java.time.LocalDateTime;
 
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Jacksonized
 public class ReservationRequest {
     @NotNull(message = "Table ID is required")
     private Integer tableId;
@@ -28,4 +30,3 @@ public class ReservationRequest {
     @Size(max = 500)
     private String note;
 }
-
