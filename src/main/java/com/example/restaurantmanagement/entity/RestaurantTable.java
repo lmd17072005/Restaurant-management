@@ -3,6 +3,7 @@ package com.example.restaurantmanagement.entity;
 import com.example.restaurantmanagement.entity.enums.TableStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnTransformer;
 
 @Entity
 @Table(name = "ban_an")
@@ -25,8 +26,8 @@ public class RestaurantTable {
     private Integer capacity;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "trang_thai", nullable = false)
+    @Column(name = "trang_thai", nullable = false, columnDefinition = "trang_thai_ban_enum")
+    @ColumnTransformer(write = "?::trang_thai_ban_enum", read = "trang_thai::text")
     @Builder.Default
     private TableStatus status = TableStatus.trong;
 }
-

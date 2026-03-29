@@ -74,7 +74,9 @@ public class ReservationServiceImpl implements ReservationService {
                 .createdBy(currentUser)
                 .build();
 
-        return reservationMapper.toResponse(reservationRepository.save(reservation));
+        Reservation saved = reservationRepository.save(reservation);
+
+        return reservationMapper.toResponse(saved);
     }
 
     @Override
