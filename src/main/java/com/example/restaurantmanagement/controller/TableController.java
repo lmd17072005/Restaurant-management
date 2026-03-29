@@ -25,7 +25,7 @@ public class TableController {
 
     private final TableService tableService;
 
-    @GetMapping
+     @GetMapping
     @Operation(summary = "Get all tables")
     public ResponseEntity<ApiResponse<List<TableResponse>>> getAll() {
         return ResponseEntity.ok(ApiResponse.success(tableService.getAllTables()));
