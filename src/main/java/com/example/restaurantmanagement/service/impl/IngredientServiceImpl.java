@@ -2,6 +2,7 @@ package com.example.restaurantmanagement.service.impl;
 
 import com.example.restaurantmanagement.dto.request.IngredientRequest;
 import com.example.restaurantmanagement.dto.response.IngredientResponse;
+import com.example.restaurantmanagement.dto.response.PageResponse;
 import com.example.restaurantmanagement.entity.Ingredient;
 import com.example.restaurantmanagement.entity.enums.IngredientStatus;
 import com.example.restaurantmanagement.exception.DuplicateResourceException;
@@ -10,6 +11,8 @@ import com.example.restaurantmanagement.mapper.IngredientMapper;
 import com.example.restaurantmanagement.repository.IngredientRepository;
 import com.example.restaurantmanagement.service.IngredientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,6 +72,22 @@ public class IngredientServiceImpl implements IngredientService {
             throw new ResourceNotFoundException("Ingredient", "id", id);
         }
         ingredientRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageResponse<IngredientResponse> getAllIngredients(Pageable pageable) {
+        Page<Ingredient> page = ingredientRepository.findAll(pageable);
+        List<IngredientResponse> content = ingredientMapper.toResponseList(page.getContent());
+        return PageResponse.of(page, content);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageResponse<IngredientResponse> searchIngredients(String keyword, Pageable pageable) {
+        Page<Ingredient> page = ingredientRepository.findByNameContainingIgnoreCase(keyword, pageable);
+        List<IngredientResponse> content = ingredientMapper.toResponseList(page.getContent());
+        return PageResponse.of(page, content);
     }
 }
 
