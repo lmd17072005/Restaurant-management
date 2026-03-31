@@ -49,6 +49,8 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOriginPatterns(List.of("*"));
         // configuration.setAllowedOrigins(List.of("http://192.168.1.50:4200"));
+        configuration.setAllowedOrigins(List.of("http://localhost:4200" , "https://desinare.vercel.app/"));
+
 
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
