@@ -58,18 +58,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public OrderResponse createOrder(OrderRequest request) {
+    public List<OrderResponse> createOrder(OrderRequest request) {
         Invoice invoice = invoiceRepository.findById(request.getInvoiceId())
                 .orElseThrow(() -> new ResourceNotFoundException("Invoice", "id", request.getInvoiceId()));
 
         User currentUser = getCurrentUser();
-
-        Order order = Order.builder()
-                .invoice(invoice)
-                .createdBy(currentUser)
-                .status(OrderStatus.cho_che_bien)
-                .orderItems(new ArrayList<>())
-                .build();
+        List<Order> savedOrders = new ArrayList<>();
 
         for (OrderItemRequest itemReq : request.getItems()) {
             MenuItem menuItem = menuItemRepository.findById(itemReq.getMenuItemId())
@@ -79,19 +73,21 @@ public class OrderServiceImpl implements OrderService {
                 throw new BadRequestException("Menu item not available: " + menuItem.getName());
             }
 
-            OrderItem orderItem = OrderItem.builder()
-                    .order(order)
+            // Mỗi item là 1 Order riêng
+            Order order = Order.builder()
+                    .invoice(invoice)
                     .menuItem(menuItem)
                     .quantity(itemReq.getQuantity())
                     .unitPrice(menuItem.getPrice())
                     .note(itemReq.getNote())
+                    .createdBy(currentUser)
+                    .status(OrderStatus.cho_che_bien)
                     .build();
 
-            order.getOrderItems().add(orderItem);
+            savedOrders.add(orderRepository.save(order));
         }
 
-        // Invoice subtotal/total recalculated by PostgreSQL trigger fn_ctdh_tinh_lai_hd
-        return orderMapper.toResponse(orderRepository.save(order));
+        return orderMapper.toResponseList(savedOrders);
     }
 
     @Override

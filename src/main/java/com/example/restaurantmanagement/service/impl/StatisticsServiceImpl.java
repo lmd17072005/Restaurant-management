@@ -2,7 +2,7 @@ package com.example.restaurantmanagement.service.impl;
 
 import com.example.restaurantmanagement.dto.response.TopSellingItemResponse;
 import com.example.restaurantmanagement.exception.BadRequestException;
-import com.example.restaurantmanagement.repository.OrderItemRepository;
+import com.example.restaurantmanagement.repository.OrderRepository;
 import com.example.restaurantmanagement.service.StatisticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -21,8 +21,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StatisticsServiceImpl implements StatisticsService {
 
-    private final OrderItemRepository orderItemRepository;
+    private final OrderRepository orderRepository;
     private static final int MAX_LIMIT = 50;
+
+
 
     @Override
     public List<TopSellingItemResponse> getTopSellingItemsThisWeek(int limit) {
@@ -58,8 +60,8 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         int safeLimit = Math.min(limit, MAX_LIMIT);
 
-        List<Object[]> results = orderItemRepository.findTopSellingItems(
-                startDate, endDate, PageRequest.of(0, limit)
+        List<Object[]> results = orderRepository.findTopSellingItems(
+                startDate, endDate, PageRequest.of(0, safeLimit)
         );
 
         AtomicInteger rank = new AtomicInteger(1);

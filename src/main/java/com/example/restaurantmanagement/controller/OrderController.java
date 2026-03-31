@@ -56,8 +56,13 @@ public class OrderController {
     @PostMapping
     @PreAuthorize("hasAnyRole('QUAN_LY','NHAN_VIEN')")
     @Operation(summary = "Create order")
-    public ResponseEntity<ApiResponse<OrderResponse>> create(@Valid @RequestBody OrderRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(NotificationMessage.ORDER_CREATED_SUCCESS, orderService.createOrder(request)));
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> create(
+            @Valid @RequestBody OrderRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.created(
+                        NotificationMessage.ORDER_CREATED_SUCCESS,
+                        orderService.createOrder(request)
+                ));
     }
 
     @PatchMapping("/{id}/status")

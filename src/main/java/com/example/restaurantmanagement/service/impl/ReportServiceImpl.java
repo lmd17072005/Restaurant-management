@@ -4,7 +4,7 @@ import com.example.restaurantmanagement.dto.response.*;
 import com.example.restaurantmanagement.entity.RestaurantTable;
 import com.example.restaurantmanagement.entity.enums.TableStatus;
 import com.example.restaurantmanagement.repository.InvoiceRepository;
-import com.example.restaurantmanagement.repository.OrderItemRepository;
+import com.example.restaurantmanagement.repository.OrderRepository;
 import com.example.restaurantmanagement.repository.ReservationRepository;
 import com.example.restaurantmanagement.repository.RestaurantTableRepository;
 import com.example.restaurantmanagement.service.ReportService;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class ReportServiceImpl implements ReportService {
 
     private final InvoiceRepository invoiceRepository;
-    private final OrderItemRepository orderItemRepository;
+    private final OrderRepository orderRepository;
     private final RestaurantTableRepository tableRepository;
     private final ReservationRepository reservationRepository;
 
@@ -77,7 +77,7 @@ public class ReportServiceImpl implements ReportService {
     @Override
     @Transactional(readOnly = true)
     public List<CategoryReportResponse> getCategoryReport(int year) {
-        List<Object[]> rows = orderItemRepository.findRevenueByCategory(year);
+        List<Object[]> rows = orderRepository.findRevenueByCategory(year);
 
         BigDecimal total = rows.stream()
                 .map(r -> (BigDecimal) r[2])
@@ -103,7 +103,7 @@ public class ReportServiceImpl implements ReportService {
     @Transactional(readOnly = true)
     public List<BestSellerResponse> getBestSellers(int year, int limit) {
         Pageable pageable = PageRequest.of(0, limit);
-        List<Object[]> rows = orderItemRepository.findBestSellers(year, pageable);
+        List<Object[]> rows = orderRepository.findBestSellers(year, pageable);
 
         BigDecimal totalRevenue = rows.stream()
                 .map(r -> (BigDecimal) r[2])
