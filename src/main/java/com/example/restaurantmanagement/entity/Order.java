@@ -3,7 +3,7 @@ package com.example.restaurantmanagement.entity;
 import com.example.restaurantmanagement.entity.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
-
+import org.hibernate.annotations.ColumnTransformer;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -45,7 +45,8 @@ public class Order {
     private String note;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "trang_thai", nullable = false)
+    @Column(name = "trang_thai", nullable = false, columnDefinition = "trang_thai_don_hang_enum")
+    @ColumnTransformer(write = "CAST(? AS trang_thai_don_hang_enum)")
     @Builder.Default
     private OrderStatus status = OrderStatus.cho_che_bien;
 
