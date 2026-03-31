@@ -11,7 +11,7 @@ public interface OrderService {
     OrderResponse getOrderById(Long id);
     List<OrderResponse> getOrdersByInvoice(Long invoiceId);
     List<OrderResponse> getOrdersByStatus(OrderStatus status);
-    OrderResponse createOrder(OrderRequest request);
+    List<OrderResponse> createOrder(OrderRequest request);
     OrderResponse updateOrderStatus(Long id, OrderStatus status);
     void deleteOrder(Long id);
 }

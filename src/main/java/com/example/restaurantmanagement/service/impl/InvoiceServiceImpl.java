@@ -125,6 +125,15 @@ public class InvoiceServiceImpl implements InvoiceService {
         return invoiceMapper.toResponse(invoiceRepository.save(invoice));
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public InvoiceResponse getOpenInvoiceByTable(Integer tableId) {
+        return invoiceRepository
+                .findLatestOpenInvoiceByTableId(tableId)
+                .map(invoiceMapper::toResponse)
+                .orElseThrow(() -> new ResourceNotFoundException("Open invoice", "tableId", tableId));
+    }
+
     private String generateInvoiceCode() {
         String dateStr = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
         long count = invoiceRepository.findAll().stream()

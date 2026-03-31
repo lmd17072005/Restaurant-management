@@ -3,11 +3,15 @@ package com.example.restaurantmanagement.entity;
 import com.example.restaurantmanagement.entity.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnTransformer;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * Bảng don_hang — sau khi gộp chi_tiet_don_hang vào.
+ * Mỗi row = 1 line item (1 món ăn) trong hóa đơn.
+ */
 @Entity
 @Table(name = "don_hang")
 @Getter
@@ -26,8 +30,27 @@ public class Order {
     @JoinColumn(name = "hoa_don_id", nullable = false)
     private Invoice invoice;
 
+    // ---- Fields merged from chi_tiet_don_hang ----
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mon_id", nullable = false)
+    private MenuItem menuItem;
+
+    @Column(name = "so_luong", nullable = false)
+    private Integer quantity;
+
+    @Column(name = "don_gia", precision = 12, scale = 2)
+    private BigDecimal unitPrice;
+
+    @Column(name = "thanh_tien", precision = 12, scale = 2, insertable = false, updatable = false)
+    private BigDecimal subtotal;
+
+    @Column(name = "ghi_chu", length = 500)
+    private String note;
+    // ------------------------------------------------
+
     @Enumerated(EnumType.STRING)
-    @Column(name = "trang_thai", nullable = false)
+    @Column(name = "trang_thai", nullable = false, columnDefinition = "trang_thai_don_hang_enum")
+    @ColumnTransformer(write = "CAST(? AS trang_thai_don_hang_enum)")
     @Builder.Default
     private OrderStatus status = OrderStatus.cho_che_bien;
 
@@ -38,9 +61,4 @@ public class Order {
     @Column(name = "ngay_tao", nullable = false, updatable = false)
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
-
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<OrderItem> orderItems = new ArrayList<>();
 }
-

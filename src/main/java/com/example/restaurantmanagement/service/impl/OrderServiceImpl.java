@@ -19,8 +19,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,22 +56,19 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toResponseList(orderRepository.findByStatus(status));
     }
 
+    /**
+     * Tạo đơn hàng: mỗi item trong request tạo ra 1 row don_hang riêng.
+     * Trả về danh sách tất cả các row vừa được tạo.
+     */
     @Override
     @Transactional
-    public OrderResponse createOrder(OrderRequest request) {
+    public List<OrderResponse> createOrder(OrderRequest request) {
         Invoice invoice = invoiceRepository.findById(request.getInvoiceId())
                 .orElseThrow(() -> new ResourceNotFoundException("Invoice", "id", request.getInvoiceId()));
 
         User currentUser = getCurrentUser();
 
-        Order order = Order.builder()
-                .invoice(invoice)
-                .createdBy(currentUser)
-                .status(OrderStatus.cho_che_bien)
-                .orderItems(new ArrayList<>())
-                .build();
-
-        for (OrderItemRequest itemReq : request.getItems()) {
+        List<Order> savedOrders = request.getItems().stream().map(itemReq -> {
             MenuItem menuItem = menuItemRepository.findById(itemReq.getMenuItemId())
                     .orElseThrow(() -> new ResourceNotFoundException("MenuItem", "id", itemReq.getMenuItemId()));
 
@@ -79,19 +76,20 @@ public class OrderServiceImpl implements OrderService {
                 throw new BadRequestException("Menu item not available: " + menuItem.getName());
             }
 
-            OrderItem orderItem = OrderItem.builder()
-                    .order(order)
+            Order order = Order.builder()
+                    .invoice(invoice)
                     .menuItem(menuItem)
                     .quantity(itemReq.getQuantity())
                     .unitPrice(menuItem.getPrice())
                     .note(itemReq.getNote())
+                    .createdBy(currentUser)
+                    .status(OrderStatus.cho_che_bien)
                     .build();
 
-            order.getOrderItems().add(orderItem);
-        }
+            return orderRepository.save(order);
+        }).collect(Collectors.toList());
 
-        // Invoice subtotal/total recalculated by PostgreSQL trigger fn_ctdh_tinh_lai_hd
-        return orderMapper.toResponse(orderRepository.save(order));
+        return orderMapper.toResponseList(savedOrders);
     }
 
     @Override
@@ -120,4 +118,3 @@ public class OrderServiceImpl implements OrderService {
         throw new RuntimeException("User not authenticated");
     }
 }
-

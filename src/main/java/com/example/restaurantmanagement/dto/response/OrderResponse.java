@@ -3,9 +3,10 @@ package com.example.restaurantmanagement.dto.response;
 import com.example.restaurantmanagement.entity.enums.OrderStatus;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
+/** Response cho một dòng đơn hàng (don_hang) — mỗi dòng = 1 món ăn */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,10 +14,14 @@ import java.util.List;
 public class OrderResponse {
     private Long id;
     private Long invoiceId;
+    private Integer menuItemId;
+    private String menuItemName;
+    private Integer quantity;
+    private BigDecimal unitPrice;
+    private BigDecimal subtotal;
+    private String note;
     private OrderStatus status;
     private Long createdById;
     private String createdByName;
     private LocalDateTime createdAt;
-    private List<OrderItemResponse> items;
 }
-

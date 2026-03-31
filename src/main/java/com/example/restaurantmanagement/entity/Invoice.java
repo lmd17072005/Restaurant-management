@@ -3,6 +3,7 @@ package com.example.restaurantmanagement.entity;
 import com.example.restaurantmanagement.entity.enums.InvoiceStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnTransformer;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -50,7 +51,8 @@ public class Invoice {
     private BigDecimal totalAmount = BigDecimal.ZERO;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "trang_thai", nullable = false)
+    @Column(name = "trang_thai", nullable = false, columnDefinition = "trang_thai_hoa_don_enum")
+    @ColumnTransformer(write = "CAST(? AS trang_thai_hoa_don_enum)")
     @Builder.Default
     private InvoiceStatus status = InvoiceStatus.chua_thanh_toan;
 

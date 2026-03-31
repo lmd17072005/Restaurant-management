@@ -55,16 +55,19 @@ public class OrderController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('QUAN_LY','NHAN_VIEN')")
-    @Operation(summary = "Create order")
-    public ResponseEntity<ApiResponse<OrderResponse>> create(@Valid @RequestBody OrderRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.created(NotificationMessage.ORDER_CREATED_SUCCESS, orderService.createOrder(request)));
+    @Operation(summary = "Create order (one row per item)")
+    public ResponseEntity<ApiResponse<List<OrderResponse>>> create(@Valid @RequestBody OrderRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                ApiResponse.created(NotificationMessage.ORDER_CREATED_SUCCESS, orderService.createOrder(request)));
     }
 
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasAnyRole('QUAN_LY','NHAN_VIEN')")
     @Operation(summary = "Update order status")
-    public ResponseEntity<ApiResponse<OrderResponse>> updateStatus(@PathVariable Long id, @RequestParam OrderStatus status) {
-        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.ORDER_STATUS_UPDATED_SUCCESS, orderService.updateOrderStatus(id, status)));
+    public ResponseEntity<ApiResponse<OrderResponse>> updateStatus(@PathVariable Long id,
+            @RequestParam OrderStatus status) {
+        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.ORDER_STATUS_UPDATED_SUCCESS,
+                orderService.updateOrderStatus(id, status)));
     }
 
     @DeleteMapping("/{id}")
@@ -75,4 +78,3 @@ public class OrderController {
         return ResponseEntity.ok(ApiResponse.success(NotificationMessage.ORDER_DELETED_SUCCESS, null));
     }
 }
-

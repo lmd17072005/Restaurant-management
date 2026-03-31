@@ -3,6 +3,7 @@ package com.example.restaurantmanagement.entity;
 import com.example.restaurantmanagement.entity.enums.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnTransformer;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -29,7 +30,8 @@ public class Payment {
     private BigDecimal amount;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "phuong_thuc", nullable = false)
+    @Column(name = "phuong_thuc", nullable = false, columnDefinition = "phuong_thuc_thanh_toan_enum")
+    @ColumnTransformer(write = "CAST(? AS phuong_thuc_thanh_toan_enum)")
     private PaymentMethod paymentMethod;
 
     @ManyToOne(fetch = FetchType.LAZY)
