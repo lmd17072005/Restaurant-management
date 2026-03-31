@@ -4,6 +4,7 @@ import com.example.restaurantmanagement.entity.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.List;
 @Builder
 public class Order {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "don_hang_id")
@@ -25,6 +27,22 @@ public class Order {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hoa_don_id", nullable = false)
     private Invoice invoice;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "mon_id", nullable = false)
+    private MenuItem menuItem;
+
+    @Column(name = "so_luong", nullable = false)
+    private Integer quantity;
+
+    @Column(name = "don_gia", nullable = false, precision = 12, scale = 2)
+    private BigDecimal unitPrice;
+
+    @Column(name = "thanh_tien", precision = 12, scale = 2, insertable = false, updatable = false)
+    private BigDecimal subtotal;
+
+    @Column(name = "ghi_chu", length = 500)
+    private String note;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "trang_thai", nullable = false)
@@ -39,8 +57,5 @@ public class Order {
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    private List<OrderItem> orderItems = new ArrayList<>();
 }
 
