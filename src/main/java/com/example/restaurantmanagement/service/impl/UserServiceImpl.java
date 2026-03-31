@@ -1,9 +1,11 @@
 package com.example.restaurantmanagement.service.impl;
 
+import com.example.restaurantmanagement.dto.request.CreateStaffRequest;
 import com.example.restaurantmanagement.dto.response.PageResponse;
 import com.example.restaurantmanagement.dto.response.UserResponse;
 import com.example.restaurantmanagement.entity.User;
 import com.example.restaurantmanagement.entity.enums.Role;
+import com.example.restaurantmanagement.exception.DuplicateResourceException;
 import com.example.restaurantmanagement.exception.ResourceNotFoundException;
 import com.example.restaurantmanagement.mapper.UserMapper;
 import com.example.restaurantmanagement.repository.UserRepository;
@@ -11,6 +13,7 @@ import com.example.restaurantmanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +25,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<UserResponse> getAllUsers() {
@@ -56,6 +60,30 @@ public class UserServiceImpl implements UserService {
             throw new ResourceNotFoundException("User", "id", id);
         }
         userRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional
+    public UserResponse createStaff(CreateStaffRequest request) {
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw new DuplicateResourceException("Email already exists!");
+        }
+        
+        Role role = request.getRole();
+        if (role == null || role == Role.KHACH_HANG) {
+            role = Role.NHAN_VIEN;
+        }
+        
+        User user = User.builder()
+                .username(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .fullName(request.getName())
+                .email(request.getEmail())
+                .phone(request.getPhone())
+                .role(role)
+                .build();
+        
+        return userMapper.toResponse(userRepository.save(user));
     }
 
     @Override

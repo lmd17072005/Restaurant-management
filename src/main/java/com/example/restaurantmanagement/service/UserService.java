@@ -1,5 +1,6 @@
 package com.example.restaurantmanagement.service;
 
+import com.example.restaurantmanagement.dto.request.CreateStaffRequest;
 import com.example.restaurantmanagement.dto.response.PageResponse;
 import com.example.restaurantmanagement.dto.response.UserResponse;
 import com.example.restaurantmanagement.entity.enums.Role;
@@ -13,6 +14,7 @@ public interface UserService {
     List<UserResponse> getUsersByRole(Role role);
     UserResponse updateRole(Long id, Role role);
     void deleteUser(Long id);
+    UserResponse createStaff(CreateStaffRequest request);
 
     PageResponse<UserResponse> getAllUsers(Pageable pageable);
     PageResponse<UserResponse> getUsersByRole(Role role, Pageable pageable);

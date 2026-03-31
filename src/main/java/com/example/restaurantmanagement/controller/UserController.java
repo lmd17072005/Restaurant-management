@@ -1,5 +1,6 @@
 package com.example.restaurantmanagement.controller;
 
+import com.example.restaurantmanagement.dto.request.CreateStaffRequest;
 import com.example.restaurantmanagement.dto.response.ApiResponse;
 import com.example.restaurantmanagement.dto.response.PageResponse;
 import com.example.restaurantmanagement.dto.response.UserResponse;
@@ -8,10 +9,12 @@ import com.example.restaurantmanagement.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +28,14 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+
+    @PostMapping
+    @PreAuthorize("hasRole('QUAN_LY')")
+    @Operation(summary = "Create new staff member")
+    public ResponseEntity<ApiResponse<UserResponse>> createStaff(@Valid @RequestBody CreateStaffRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success("Staff created successfully", userService.createStaff(request)));
+    }
     
     @GetMapping("/page")
     @PreAuthorize("hasRole('QUAN_LY')")
