@@ -5,6 +5,7 @@ import com.example.restaurantmanagement.dto.response.PageResponse;
 import com.example.restaurantmanagement.dto.response.UserResponse;
 import com.example.restaurantmanagement.entity.User;
 import com.example.restaurantmanagement.entity.enums.Role;
+import com.example.restaurantmanagement.entity.enums.UserStatus;
 import com.example.restaurantmanagement.exception.DuplicateResourceException;
 import com.example.restaurantmanagement.exception.ResourceNotFoundException;
 import com.example.restaurantmanagement.mapper.UserMapper;
@@ -81,6 +82,7 @@ public class UserServiceImpl implements UserService {
                 .email(request.getEmail())
                 .phone(request.getPhone())
                 .role(role)
+                .status(UserStatus.hoat_dong)
                 .build();
 
         return userMapper.toResponse(userRepository.save(user));
