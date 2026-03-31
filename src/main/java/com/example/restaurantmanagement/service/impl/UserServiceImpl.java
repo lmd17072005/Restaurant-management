@@ -1,5 +1,6 @@
 package com.example.restaurantmanagement.service.impl;
 
+import com.example.restaurantmanagement.dto.response.PageResponse;
 import com.example.restaurantmanagement.dto.response.UserResponse;
 import com.example.restaurantmanagement.entity.User;
 import com.example.restaurantmanagement.entity.enums.Role;
@@ -8,6 +9,8 @@ import com.example.restaurantmanagement.mapper.UserMapper;
 import com.example.restaurantmanagement.repository.UserRepository;
 import com.example.restaurantmanagement.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +56,30 @@ public class UserServiceImpl implements UserService {
             throw new ResourceNotFoundException("User", "id", id);
         }
         userRepository.deleteById(id);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageResponse<UserResponse> getAllUsers(Pageable pageable) {
+        Page<User> page = userRepository.findAll(pageable);
+        List<UserResponse> content = userMapper.toResponseList(page.getContent());
+        return PageResponse.of(page, content);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageResponse<UserResponse> getUsersByRole(Role role, Pageable pageable) {
+        Page<User> page = userRepository.findByRole(role, pageable);
+        List<UserResponse> content = userMapper.toResponseList(page.getContent());
+        return PageResponse.of(page, content);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageResponse<UserResponse> searchUsers(String keyword, Pageable pageable) {
+        Page<User> page = userRepository.findByFullNameContainingIgnoreCase(keyword, pageable);
+        List<UserResponse> content = userMapper.toResponseList(page.getContent());
+        return PageResponse.of(page, content);
     }
 }
 

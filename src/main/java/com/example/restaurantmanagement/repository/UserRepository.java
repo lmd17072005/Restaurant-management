@@ -2,6 +2,8 @@ package com.example.restaurantmanagement.repository;
 
 import com.example.restaurantmanagement.entity.User;
 import com.example.restaurantmanagement.entity.enums.Role;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -15,5 +17,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
     List<User> findByRole(Role role);
+
+    Page<User> findByRole(Role role, Pageable pageable);
+    Page<User> findByFullNameContainingIgnoreCase(String fullName, Pageable pageable);
 }
 

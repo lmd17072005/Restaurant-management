@@ -72,6 +72,10 @@ public class Invoice {
     @Builder.Default
     private Integer rowVersion = 1;
 
+    @Column(name = "so_khach", nullable = false)
+    @Builder.Default
+    private  Integer numberOfGuests = 1;
+
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Order> orders = new ArrayList<>();

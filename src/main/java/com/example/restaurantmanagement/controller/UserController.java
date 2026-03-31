@@ -1,13 +1,17 @@
 package com.example.restaurantmanagement.controller;
 
 import com.example.restaurantmanagement.dto.response.ApiResponse;
+import com.example.restaurantmanagement.dto.response.PageResponse;
 import com.example.restaurantmanagement.dto.response.UserResponse;
 import com.example.restaurantmanagement.entity.enums.Role;
 import com.example.restaurantmanagement.service.UserService;
-import com.example.restaurantmanagement.entity.enums.NotificationMessage;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -21,12 +25,18 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
-
-    @GetMapping
+    
+    @GetMapping("/page")
     @PreAuthorize("hasRole('QUAN_LY')")
-    @Operation(summary = "Get all users")
-    public ResponseEntity<ApiResponse<List<UserResponse>>> getAllUsers() {
-        return ResponseEntity.ok(ApiResponse.success(userService.getAllUsers()));
+    @Operation(summary = "Get all users with pagination")
+    public ResponseEntity<ApiResponse<PageResponse<UserResponse>>> getAllUsersPaged(
+            @Parameter(description = "Page number (0-based)") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Page size") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Sort by field") @RequestParam(defaultValue = "id") String sortBy,
+            @Parameter(description = "Sort direction (asc/desc)") @RequestParam(defaultValue = "asc") String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(ApiResponse.success(userService.getAllUsers(pageable)));
     }
 
     @GetMapping("/{id}")
@@ -43,11 +53,39 @@ public class UserController {
         return ResponseEntity.ok(ApiResponse.success(userService.getUsersByRole(role)));
     }
 
+    @GetMapping("/role/{role}/page")
+    @PreAuthorize("hasRole('QUAN_LY')")
+    @Operation(summary = "Get users by role with pagination")
+    public ResponseEntity<ApiResponse<PageResponse<UserResponse>>> getUsersByRolePaged(
+            @PathVariable Role role,
+            @Parameter(description = "Page number (0-based)") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Page size") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Sort by field") @RequestParam(defaultValue = "id") String sortBy,
+            @Parameter(description = "Sort direction (asc/desc)") @RequestParam(defaultValue = "asc") String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(ApiResponse.success(userService.getUsersByRole(role, pageable)));
+    }
+
+    @GetMapping("/search")
+    @PreAuthorize("hasRole('QUAN_LY')")
+    @Operation(summary = "Search users by name with pagination")
+    public ResponseEntity<ApiResponse<PageResponse<UserResponse>>> searchUsers(
+            @Parameter(description = "Search keyword") @RequestParam String keyword,
+            @Parameter(description = "Page number (0-based)") @RequestParam(defaultValue = "0") int page,
+            @Parameter(description = "Page size") @RequestParam(defaultValue = "10") int size,
+            @Parameter(description = "Sort by field") @RequestParam(defaultValue = "id") String sortBy,
+            @Parameter(description = "Sort direction (asc/desc)") @RequestParam(defaultValue = "asc") String sortDir) {
+        Sort sort = sortDir.equalsIgnoreCase("desc") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(ApiResponse.success(userService.searchUsers(keyword, pageable)));
+    }
+
     @PatchMapping("/{id}/role")
     @PreAuthorize("hasRole('QUAN_LY')")
     @Operation(summary = "Update user role")
     public ResponseEntity<ApiResponse<UserResponse>> updateRole(@PathVariable Long id, @RequestParam Role role) {
-        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.USER_ROLE_UPDATED_SUCCESS, userService.updateRole(id, role)));
+        return ResponseEntity.ok(ApiResponse.success("Role updated", userService.updateRole(id, role)));
     }
 
     @DeleteMapping("/{id}")
@@ -55,7 +93,7 @@ public class UserController {
     @Operation(summary = "Delete user")
     public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
-        return ResponseEntity.ok(ApiResponse.success(NotificationMessage.USER_DELETED_SUCCESS, null));
+        return ResponseEntity.ok(ApiResponse.success("User deleted", null));
     }
 }
 

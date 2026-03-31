@@ -3,6 +3,8 @@ package com.example.restaurantmanagement.entity;
 import com.example.restaurantmanagement.entity.enums.IngredientStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -36,7 +38,8 @@ public class Ingredient {
     private BigDecimal minStockQuantity = BigDecimal.ZERO;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "trang_thai", nullable = false)
+    @Column(name = "trang_thai", nullable = false, columnDefinition = "trang_thai_nguyen_lieu_enum")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Builder.Default
     private IngredientStatus status = IngredientStatus.hoat_dong;
 
@@ -44,4 +47,3 @@ public class Ingredient {
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 }
-;
