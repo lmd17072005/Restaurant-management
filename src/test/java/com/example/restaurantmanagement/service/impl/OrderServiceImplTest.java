@@ -32,6 +32,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -99,13 +100,14 @@ class OrderServiceImplTest {
         when(invoiceRepository.findById(1L)).thenReturn(Optional.of(mockInvoice));
         when(menuItemRepository.findById(1)).thenReturn(Optional.of(mockMenuItem));
         when(orderRepository.save(any(Order.class))).thenReturn(mockOrder);
-        when(orderMapper.toResponse(any(Order.class))).thenReturn(new OrderResponse());
+        when(orderMapper.toResponseList(anyList())).thenReturn(List.of(new OrderResponse()));
 
         // Act
-        OrderResponse response = orderService.createOrder(request);
+        List<OrderResponse> response = orderService.createOrder(request);
 
         // Assert
         assertNotNull(response);
+        assertFalse(response.isEmpty());
         verify(orderRepository, times(1)).save(any(Order.class));
     }
 
