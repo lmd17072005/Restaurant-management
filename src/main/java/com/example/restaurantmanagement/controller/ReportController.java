@@ -59,4 +59,25 @@ public class ReportController {
         int y = year == 0 ? LocalDate.now().getYear() : year;
         return ResponseEntity.ok(ApiResponse.success(reportService.getBestSellers(y, limit)));
     }
+
+    @GetMapping("/dashboard-summary")
+    @PreAuthorize("hasRole('QUAN_LY')")
+    @Operation(summary = "Get dashboard summary stats")
+    public ResponseEntity<ApiResponse<DashboardSummaryResponse>> getDashboardSummary() {
+        return ResponseEntity.ok(ApiResponse.success(reportService.getDashboardSummary()));
+    }
+
+    @GetMapping("/weekly-trend")
+    @PreAuthorize("hasRole('QUAN_LY')")
+    @Operation(summary = "Get weekly revenue trend")
+    public ResponseEntity<ApiResponse<List<DailyRevenueResponse>>> getWeeklyTrend() {
+        return ResponseEntity.ok(ApiResponse.success(reportService.getWeeklyRevenueTrend()));
+    }
+
+    @GetMapping("/peak-hours")
+    @PreAuthorize("hasRole('QUAN_LY')")
+    @Operation(summary = "Get peak hours today")
+    public ResponseEntity<ApiResponse<List<PeakHourResponse>>> getPeakHours() {
+        return ResponseEntity.ok(ApiResponse.success(reportService.getPeakHoursToday()));
+    }
 }
