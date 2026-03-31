@@ -40,6 +40,24 @@ public class MenuItemController {
         return ResponseEntity.ok(ApiResponse.success(menuItemService.getAllMenuItems(pageable)));
     }
 
+    @GetMapping("/available")
+    @Operation(summary = "Get all available (con_ban) menu items")
+    public ResponseEntity<ApiResponse<List<MenuItemResponse>>> getAvailable() {
+        return ResponseEntity.ok(ApiResponse.success(menuItemService.getAvailableMenuItems()));
+    }
+
+    @GetMapping("/available/search")
+    @Operation(summary = "Search available menu items by keyword")
+    public ResponseEntity<ApiResponse<List<MenuItemResponse>>> searchAvailable(@RequestParam String keyword) {
+        return ResponseEntity.ok(ApiResponse.success(menuItemService.searchAvailableMenuItems(keyword)));
+    }
+
+    @GetMapping("/available/category/{categoryId}")
+    @Operation(summary = "Get available menu items by category")
+    public ResponseEntity<ApiResponse<List<MenuItemResponse>>> getAvailableByCategory(@PathVariable Integer categoryId) {
+        return ResponseEntity.ok(ApiResponse.success(menuItemService.getAvailableMenuItemsByCategory(categoryId)));
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Get menu item by ID")
     public ResponseEntity<ApiResponse<MenuItemResponse>> getById(@PathVariable Integer id) {

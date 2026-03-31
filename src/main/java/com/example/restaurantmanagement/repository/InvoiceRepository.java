@@ -19,6 +19,18 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     List<Invoice> findByTableId(Integer tableId);
     List<Invoice> findByCustomerId(Long customerId);
 
+    /**
+     * Find the latest unpaid invoice for a given table.
+     * Uses native SQL with explicit enum cast to avoid Hibernate JPQL enum type mismatch.
+     */
+    @Query(value = """
+            SELECT * FROM hoa_don
+            WHERE ban_id = :tableId
+              AND trang_thai = CAST('chua_thanh_toan' AS trang_thai_hoa_don_enum)
+            ORDER BY ngay_tao DESC
+            LIMIT 1
+            """, nativeQuery = true)
+    Optional<Invoice> findLatestOpenInvoiceByTableId(@Param("tableId") Integer tableId);
 
     @Query("SELECT COALESCE(SUM(i.totalAmount), 0) FROM Invoice i " +
             "WHERE i.status = com.example.restaurantmanagement.entity.enums.InvoiceStatus.da_thanh_toan " +
@@ -67,4 +79,3 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
             @Param("endOfDay") LocalDateTime endOfDay
     );
 }
-

@@ -46,6 +46,13 @@ public class InvoiceController {
         return ResponseEntity.ok(ApiResponse.success(invoiceService.getInvoicesByStatus(status)));
     }
 
+    @GetMapping("/table/{tableId}/open")
+    @PreAuthorize("hasAnyRole('QUAN_LY','NHAN_VIEN')")
+    @Operation(summary = "Get the open (unpaid) invoice for a table")
+    public ResponseEntity<ApiResponse<InvoiceResponse>> getOpenByTable(@PathVariable Integer tableId) {
+        return ResponseEntity.ok(ApiResponse.success(invoiceService.getOpenInvoiceByTable(tableId)));
+    }
+
     @PostMapping
     @PreAuthorize("hasAnyRole('QUAN_LY','NHAN_VIEN')")
     @Operation(summary = "Create invoice (open a new bill)")

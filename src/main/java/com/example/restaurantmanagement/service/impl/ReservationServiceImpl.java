@@ -136,4 +136,3 @@ public class ReservationServiceImpl implements ReservationService {
         throw new RuntimeException("User not authenticated");
     }
 }
-

@@ -13,8 +13,11 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     List<Reservation> findByStatus(ReservationStatus status);
+
     List<Reservation> findByTableId(Integer tableId);
+
     List<Reservation> findByCustomerId(Long customerId);
+
     List<Reservation> findByReservationTimeBetween(LocalDateTime start, LocalDateTime end);
 
     @Query("SELECT COUNT(r) FROM Reservation r " +
@@ -28,4 +31,3 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             @Param("endOfDay") LocalDateTime endOfDay
     );
 }
-

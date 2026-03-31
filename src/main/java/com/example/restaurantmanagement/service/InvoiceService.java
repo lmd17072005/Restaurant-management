@@ -13,5 +13,6 @@ public interface InvoiceService {
     InvoiceResponse createInvoice(InvoiceRequest request);
     InvoiceResponse updateDiscount(Long id, InvoiceRequest request);
     InvoiceResponse cancelInvoice(Long id);
+    InvoiceResponse getOpenInvoiceByTable(Integer tableId);
 }
 
