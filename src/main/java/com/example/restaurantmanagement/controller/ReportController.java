@@ -1,10 +1,13 @@
 package com.example.restaurantmanagement.controller;
 
 import com.example.restaurantmanagement.dto.response.*;
+import com.example.restaurantmanagement.service.ReportExportService;
 import com.example.restaurantmanagement.service.ReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +25,8 @@ import java.util.List;
 public class ReportController {
 
     private final ReportService reportService;
+    private final ReportExportService reportExportService;
+
 
     @GetMapping("/summary")
     @PreAuthorize("hasRole('QUAN_LY')")
@@ -79,5 +84,34 @@ public class ReportController {
     @Operation(summary = "Get peak hours today")
     public ResponseEntity<ApiResponse<List<PeakHourResponse>>> getPeakHours() {
         return ResponseEntity.ok(ApiResponse.success(reportService.getPeakHoursToday()));
+    }
+
+    @GetMapping("/export/excel")
+    @PreAuthorize("hasRole('QUAN_LY')")
+    @Operation(summary = "Export report to Excel")
+    public ResponseEntity<byte[]> exportExcel(
+            @RequestParam(defaultValue = "0") int year) {
+        int y = year == 0 ? LocalDate.now().getYear() : year;
+        byte[] data = reportExportService.exportToExcel(y);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=report_" + y + ".xlsx")
+                .contentType(MediaType.parseMediaType(
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+                .body(data);
+    }
+
+    @GetMapping("/export/pdf")
+    @PreAuthorize("hasRole('QUAN_LY')")
+    @Operation(summary = "Export report to PDF")
+    public ResponseEntity<byte[]> exportPdf(
+            @RequestParam(defaultValue = "0") int year) {
+        int y = year == 0 ? LocalDate.now().getYear() : year;
+        byte[] data = reportExportService.exportToPdf(y);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=report_" + y + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(data);
     }
 }
