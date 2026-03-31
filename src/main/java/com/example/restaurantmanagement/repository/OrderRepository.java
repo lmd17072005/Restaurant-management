@@ -23,10 +23,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "o.menuItem.imageUrl, " +
             "SUM(o.quantity), " +
             "SUM(o.subtotal) " +
-            "FROM Order o " +
+            "FROM Order o JOIN o.invoice i " +
             "WHERE o.status = com.example.restaurantmanagement.entity.enums.OrderStatus.da_phuc_vu " +
-            "AND o.createdAt >= :startDate " +
-            "AND o.createdAt < :endDate " +
+            "AND i.status = com.example.restaurantmanagement.entity.enums.InvoiceStatus.da_thanh_toan " +
+            "AND i.closedAt >= :startDate " +
+            "AND i.closedAt < :endDate " +
             "GROUP BY o.menuItem.id, o.menuItem.name, " +
             "o.menuItem.category.name, o.menuItem.imageUrl " +
             "ORDER BY SUM(o.quantity) DESC")
@@ -36,17 +37,19 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             Pageable pageable);
 
     @Query("SELECT o.menuItem.name, SUM(o.quantity), SUM(o.subtotal) " +
-            "FROM Order o " +
+            "FROM Order o JOIN o.invoice i " +
             "WHERE o.status = com.example.restaurantmanagement.entity.enums.OrderStatus.da_phuc_vu " +
-            "AND YEAR(o.createdAt) = :year " +
+            "AND i.status = com.example.restaurantmanagement.entity.enums.InvoiceStatus.da_thanh_toan " +
+            "AND YEAR(i.closedAt) = :year " +
             "GROUP BY o.menuItem.id, o.menuItem.name " +
             "ORDER BY SUM(o.quantity) DESC")
     List<Object[]> findBestSellers(@Param("year") int year, Pageable pageable);
 
     @Query("SELECT o.menuItem.category.name, SUM(o.quantity), SUM(o.subtotal) " +
-            "FROM Order o " +
+            "FROM Order o JOIN o.invoice i " +
             "WHERE o.status = com.example.restaurantmanagement.entity.enums.OrderStatus.da_phuc_vu " +
-            "AND YEAR(o.createdAt) = :year " +
+            "AND i.status = com.example.restaurantmanagement.entity.enums.InvoiceStatus.da_thanh_toan " +
+            "AND YEAR(i.closedAt) = :year " +
             "GROUP BY o.menuItem.category.id, o.menuItem.category.name " +
             "ORDER BY SUM(o.subtotal) DESC")
     List<Object[]> findRevenueByCategory(@Param("year") int year);
